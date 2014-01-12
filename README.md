@@ -35,8 +35,8 @@ except:
 ```
 
 The output will look like
-```2014-01-12 11:36:47,642    ERROR [ 10669             test.<module>            :   6] Something is wrong
-```
+    2014-01-12 11:36:47,642    ERROR [ 10669             test.<module>            :   6] Something is wrong
+
 With date, time, log level, PID, module and function, line and message
 
 NaiveConf
