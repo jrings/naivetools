@@ -12,6 +12,7 @@ and allows accessing parameters as attributes.
 
 For example, you can define _configuration file_ as simple Python code:
 
+```python
     import datetime
 
     def f(var):
@@ -21,9 +22,11 @@ For example, you can define _configuration file_ as simple Python code:
     y = f(x)
 
     L = [1,2,3, {'a': None}]
+```
 
 and then initialize and access a configuration object as
 
+```python
     from naivetools import naiveConf
     conf = naiveConf.NaiveConf('/path/to/conf.py')
 
@@ -65,3 +68,4 @@ and then initialize and access a configuration object as
     cConf = naiveConf.NaiveConf(bConf)
     bConf.li[2] = 9
     assert cConf.li == [1,2,9]
+```
