@@ -9,8 +9,9 @@
 #
 ##############
 
-import deepcopy
+import copy
 import os.path
+import types
 
 class NaiveConf(object):
 
@@ -33,6 +34,13 @@ class NaiveConf(object):
                 'Conf must be initialized with None, %s, filename, string or dict, not %s' %
                 (self.__class__.__name__, type(src)))
 
+        #We don't want to keep imports, class definitions
+        # and functions around
+        for k in self.__dict__.keys():
+            if type(self.__dict__[k]) in [types.ModuleType,
+                                          types.ClassType,
+                                          types.FunctionType]:
+                del self.__dict__[k]
 
     def initFromString(self, srcString):
         exec srcString in self.__dict__
@@ -78,7 +86,7 @@ class NaiveConf(object):
 
 
     def __copy__(self):
-        confDict = copy.deepcopy(self.__dict__)
+        confDict = self.__dict__.copy()
         if '__builtins__' in confDict:
             confDict.pop('__builtins__')
         return confDict
@@ -87,7 +95,7 @@ class NaiveConf(object):
         return self.__copy__()
 
     def getConf(self):
-        return Conf(self.__copy__())
+        return NaiveConf(self.__copy__())
 
     def __repr__(self):
         def shortenValue(v):
@@ -101,3 +109,35 @@ class NaiveConf(object):
 
     def __contains__(self, x):
         return x in self.__dict__
+
+    def __setitem__(self, key, value, **args):
+        self.__dict__.__setitem__(key, value, **args)
+
+    def __getitem__(self, key, **args):
+        return self.__dict__.__getitem__(key, **args)
+
+    def __delitem__(self, key):
+        del self.__dict__[key]
+
+    def __eq__(self, other):
+        if type(other) != NaiveConf:
+            return False
+        for key, value in self.__dict__.items():
+            if key == '__builtins__':
+                continue
+            if key not in other or \
+              value != other[key]:
+              return False
+        return True
+
+    def __iter__(self):
+        return self.__dict__.__iter__()
+
+    def __len__(self):
+        return len(self.__dict__) - 1 #ignore __builtins__
+
+    def __getattr__(self, attr):
+        if attr in ['items', 'keys', 'values', 'update']:
+            return getattr(self.__dict__, attr)
+        else:
+            return self.__getitem__(attr)
