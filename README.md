@@ -3,6 +3,41 @@ naivetools
 
 Simple, straightforward Python tools for configuring, logging and other common tasks
 
+NaiveLog
+--------
+
+NaiveLog allows you to instantly get a logger that logs to stdout or stderr
+and can be reconfigured on the fly
+
+Start your module with
+
+```python
+from naivetools import naiveLog
+
+log = naiveLog.naiveLog()
+#or
+log = naiveLog.naiveLog(name='myLog', level='DEBUG', target='stderr')
+```
+
+and you can log immediately with the usual python logging commands
+
+```python
+log.debug(...)
+log.info(...)
+log.warning(...)
+log.error(...)
+log.critical(...)
+
+try:
+  ...
+except:
+  log.exception(...)
+```
+
+The output will look like
+```2014-01-12 11:36:47,642    ERROR [ 10669             test.<module>            :   6] Something is wrong
+```
+With date, time, log level, PID, module and function, line and message
 
 NaiveConf
 ---------
@@ -11,7 +46,7 @@ NaiveConf initializes a configuration object from Python files or strings
 and allows accessing parameters as attributes.
 
 *WARNING !!!Use this only if you control all the configuration files,
-since arbitraty code could be executed!!!
+since arbitraty code could be executed!!!*
 
 For example, you can define _configuration file_ as simple Python code:
 
